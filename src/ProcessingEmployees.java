@@ -1,8 +1,10 @@
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 
 public class ProcessingEmployees {
@@ -73,6 +75,49 @@ public class ProcessingEmployees {
 			.map(Employee::getName)
 			.sorted()
 			.forEach(System.out::println);
+		
+		System.out.printf("%nEmployees by department%n");
+		
+		Map<String, List<Employee>> groupedByDepartment =
+				list.stream()
+					.collect(Collectors.groupingBy(Employee::getDepartment));
+		
+		groupedByDepartment.forEach((department, employeesInDepartment) -> {
+				
+				System.out.printf("%n%s%n", department);
+				
+				employeesInDepartment.forEach(
+						employee -> System.out.printf("    %s%n", employee));
+			}
+		);
+		
+		System.out.printf("%Count of the employees BY department");
+		
+		Map<String, Long> employeeCountByDepartment =
+				list.stream()
+					.collect(Collectors.groupingBy(Employee::getDepartment, Collectors.counting()));
+		
+		employeeCountByDepartment.forEach(
+				(department,count) -> System.out.printf("%s has %d employee(s)%n", department, count));
+		
+		
+		System.out.printf("%Sum of Employees' salaries using the Sum method %.2f%n",
+				list.stream()
+					.mapToDouble(Employee::getSalary)
+					.sum());
+		
+		System.out.printf("%Sum of Employees' salaries using the reduce method %.2f%n",
+				list.stream()
+					.mapToDouble(Employee::getSalary)
+					.reduce(0, (value1, value2) -> value1 + value2));
+		
+		System.out.printf("Average %.2f%n",
+				list.stream()
+					.mapToDouble(Employee::getSalary)
+					.average()
+					.getAsDouble());
+		
+				
 		
 				
 	}
